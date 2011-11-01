@@ -14,6 +14,7 @@ class MyBot:
 
     ant_id = {}
     orders = {}
+    objective = {}
     ant_state = {}
     live_ants = []
     ant_counter = 0
@@ -24,9 +25,12 @@ class MyBot:
     a_star = True
     turn_counter = 1
 
+    idle = set([])
+    gatherer = set([])
+    scout = set([])
+
     def __init__(self):
         # define class level variables, will be remembered between turns
-        self.mission = {"idle":0, "gather":1, "scout":2, "infantry":3, "calvary":4}
         random.seed()
 
     def do_setup(self, ants):
@@ -151,11 +155,12 @@ class MyBot:
                         self.ant_id[ant] = self.orders[ant].pop()
                         if len(self.orders[ant]) == 0:
                             logging.error("setting ant " + str(ant) + " to idle")
-                            self.ant_state[ant] == self.mission["idle"]
+                            self.idle.add(ant)
+                            #######################             finish
                
             except KeyError:
                 logging.error("this ant does not have orders")
-                self.ant_state[ant] = self.mission["idle"]
+                self.idle.add(ant)
 #            logging.error("\n\n" + str(success) + "\n\n")
 #        for hill_loc in ants.my_hills():
 #            if hill_loc in self.ant_id.values():
@@ -164,11 +169,27 @@ class MyBot:
 #                    and ants.destination(hill_loc, direction) 
 #                    not in self.ant_id.values()):
 #                        self.do_move_direction(ants, hill_loc, direction)
+
+    def valid_order(self, ants, current_order):
+        if (ants.passable(current_order
+        and ants.unoccupied(current_order)):
+            return True
+        else:
+            return False
+        
+
+    def give_conquering_orders(self, ants):
+        if len(ants.enemy_hill()) > 0
+            for ant in self.idle:
+                self.objective[ant] = ants.enemy_hill()[0]
+    
+    
     def give_idle_orders(self, ants):
-        for ant in ants.my_ants():
-            if len(self.orders[ant]:
-                order = self.order.pop()
-                if 
+        dist = {}
+        for ant in self.idle:
+            for food_loc in ants.food():
+                dist[ants.distance(self.ant_id[ant], food_loc)] = food_loc
+            keys = dist.keys().sort()
 
 
     def turn(self, ants):
@@ -197,7 +218,7 @@ class MyBot:
             if check_ant not in self.ant_id.values():
                 self.live_ants.append(self.ant_counter) 
                 self.ant_id[self.ant_counter] = check_ant
-                self.ant_state[self.ant_counter] = self.mission["idle"]
+                self.idle.add(ant)
                 self.ant_counter = self.ant_counter + 1
         #did any ants die during combat?
 #        logging.error("ants " + str(ants.my_ants()))
@@ -212,7 +233,10 @@ class MyBot:
         #logging.error("I see " + str(ants.food()) + " food") 
         #all of the updating is done, delegate tasks
         ############break out into function later
-        do_idle_orders(ants)
+        give_conquering_orders(ants)
+        give_idle_orders(ants)
+
+        do_orders(ants)
         
 
 

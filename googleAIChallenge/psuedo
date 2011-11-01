@@ -1,0 +1,25 @@
+basic turn loop
+    add live ants
+    remove dead ants
+    update orders
+        issue orders to all ants in idle set.
+            destroying enemy hills takes highest priority
+                if an enemy hill has been found send all idle ants to destroy
+            food is next
+                assign ants to gather food until all food is has been removed from the list
+            exploring the map is last
+                assign remaining idle ants to closest (random?) unseen tile
+    do orders
+        for all ants
+            if the orders are empty
+            pop the next order off the stack
+            if that location is passible
+                push the next simple order onto the stack
+            else call A* and re-issue orders
+            perform order
+            if the order queue is empty remove the ant from it's current set and add it to the idle set
+
+    perform map analytics
+        get choke points
+        find symetry
+
