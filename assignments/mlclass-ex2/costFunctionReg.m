@@ -26,14 +26,16 @@ function [J, grad] = costFunctionReg(theta, X, y, lambda)
 	J = 1/m * sum( -y' * log(h(:,1)) .- (1.-y)' * log(1.-h(:,1))) 
 %	J = J + 1/m * sum( -y' * log(h(:,1)) .- (1.-y)' * log(1.-h(:,1)))  
 	for i = 2:size(h,2)
-		J = (J + 1/m * sum( -y' * log(h(:,i)) .- (1.-y)' * log(1.-h(:,i))) + (lambda / (2*m) * theta.^2) )
+		J = (J + 1/m * sum( -y' * log(h(:,i)) .- (1.-y)' * log(1.-h(:,i))))
 	end
+	
 %(lambda / (2*m)) * theta(i,:) * theta(i,:i)
 %	for i = 2:size(theta)
 %		lsum = lsum + theta(i,1) * theta(i,1);
 %	end
 
 %	J = J + (lambda / (2 * m)) * lsum;
+	J = J + lambda/(2*m)*sum(theta(2:size(theta,1)).^2);
 
 	grad(1,1) = 1 / m * sum( (h .- y).*X(:,1));
 
